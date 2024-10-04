@@ -1,0 +1,6 @@
+* text=auto
+*.sh eol=lf
+*.js eol=lf
+*.py eol=lf
+
+*.bat eol=crlf
