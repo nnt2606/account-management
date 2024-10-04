@@ -1,4 +1,4 @@
-# account-manageement
+# account-management
 NodeJS, ReactJS, Redux, NestJS
 
 FUNCTIONALITY	
