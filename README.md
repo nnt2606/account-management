@@ -6,6 +6,8 @@ FUNCTIONALITY
 
 Feature	Description
 
+https://www.figma.com/design/pQjupE8YdTM1QQYwUEmKlG/Technical-Test?node-id=0-1&node-type=canvas&t=HYRhreMiPzus53vf-0
+
 User Registration & Authentication	Users can sign up, log in, and log out using their email and password.
 
 User Management	Admins can view and manage a list of users.
