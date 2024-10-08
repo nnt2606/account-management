@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as session from 'express-session';
-import * as passpost from 'passport';
+import session from 'express-session';
+import passpost from 'passport';
+import MongoStore from 'connect-mongo';
 
 
 async function bootstrap() {
@@ -16,7 +17,12 @@ async function bootstrap() {
       cookie: {
         maxAge: 60*60*1000,
         secure: false
-      }
+      },
+      store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost/account-management',
+        collectionName: 'sessions',
+        autoRemove: 'native',
+      })
     })
   );
 
