@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Toolbar } from "@mui/material";
+import { Box, Toolbar} from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Header from "../component/Header";
 import Sidebar from "../component/Sidebar";
@@ -12,7 +12,7 @@ const Management = () => {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", backgroundColor: '#F5F5F5' }}>
       <Header handleDrawerToggle={handleDrawerToggle} style={{ backgroundColor: '#121621' }}/>
       <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
       
