@@ -1,9 +1,12 @@
+
+
 const UserManagement = () => {
-    return(
-        <div>
-        User
-        </div>
-    )
+    
+  return (
+    <div>
+        outlet
+    </div>
+  );
 }
 
 export default UserManagement;
