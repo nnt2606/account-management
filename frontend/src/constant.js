@@ -6,7 +6,7 @@ export const SIDEBAR = [
         key: '1',
         label: 'Overview',
         icon: <HomeOutlinedIcon />,
-        path: "/management"
+        path: "/"
     },
     {
         key: '2',
