@@ -22,9 +22,9 @@ export class AuthController {
         return session;
     }
 
-    @UseGuards(AuthenticatedGuard)
-    @Get('status')
-    async getStatus(@Req() req: Request) {
-        return req.user;
-    }
+    // @UseGuards(AuthenticatedGuard)
+    // @Get('status')
+    // async getStatus(@Req() req: Request) {
+    //     return req.user;
+    // }
 }

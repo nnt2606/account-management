@@ -38,14 +38,6 @@ export default function Home() {
           >
             Register
           </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            className="button"
-            onClick={() => navigate("/management")}
-          >
-            Admin dashboard
-          </Button>
         </Stack>
     </Container>
   );

@@ -1,11 +1,18 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument, ObjectId } from "mongoose";
 
 
 export const UserSchema = new mongoose.Schema({
     email: {type: String, required: true},
+    img: {type: String},
     password: {type: String, required: true},
-    session:{type: String}
+    name: {type: String, required: true},
+    phone: {type: String},
+    account_type: {type: String},
+    nationality: {type: String},
+    language: {type: String},
+    role: {type: String},
+    date: {type: Date, default: new Date()},
+    status: {type: Boolean, default: false},
 }, {
     toJSON:{
         transform: function(doc, ret) {

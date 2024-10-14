@@ -17,7 +17,6 @@ import {
   IconButton,
   Tooltip,
   TablePagination,
-  TableFooter,
 } from "@mui/material";
 import { USER_DATA } from "../MOCK_DATA";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -222,7 +221,6 @@ const UserManagement = () => {
                       ...getRoleColor(user.role),
                       borderRadius: "12px",
                       fontWeight: "700",
-                      borderRadius: 5,
                     }}
                   />
                 </TableCell>

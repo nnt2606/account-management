@@ -4,21 +4,65 @@ import Box from "@mui/material/Box";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { NavLink, useNavigate } from "react-router-dom";
 import imgSrc from "../img/img.png";
-import { FormControlLabel, Container, Typography, Checkbox } from "@mui/material";
+import {
+  FormControlLabel,
+  Container,
+  Typography,
+  Checkbox,
+} from "@mui/material";
+import { useState } from "react";
+import {userRegister} from "../APIs/authAPIs";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [check, setCheck] = useState(true);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    checkbox: false,
+  });
+
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+    setError('')
+    setCheck(true);
+  };
 
   const handleSubmit = (event) => {
+    setCheck(false);
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-        name: data.get("name"),
-      email: data.get("email"),
-      password: data.get("password"),
-      checkbox: data.get("checkbox")
-    });
+    const { name, email, password, checkbox } = formData;
+    if (!name || !email || !password || !checkbox) {
+      setError("Please fill all the fields!");
+      return;
+    }
+    register(name, email, password);
   };
+
+  const register = async (name, email, password) => {
+    console.log(name, email, password);
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+    }
+    try{
+      const response = await userRegister(data);
+      if(response.status === 201) {
+        navigate("/login")
+      }
+    }catch(e){
+      setError("Register failed! Try again!");
+    }
+  }
 
   return (
     <Box
@@ -121,24 +165,38 @@ export default function Register() {
               id="name"
               label="Name"
               name="name"
+              value={formData.name}
+              onChange={handleChange}
+              error={check ? false: !formData.name}
+              helperText={check ? "": !formData.name ? "Please fill this field!" : ""}
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               id="email"
               label="Email address"
               name="email"
+              value={formData.email}
+              onChange={handleChange}
+              error={check ? false : !emailRegex.test(formData.email) ? true : !formData.email}
+              helperText={ check ? "" : !formData.email ? "Please fill this field" : !emailRegex.test(formData.email) ? "Invalid email format." : ""}
             />
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
+              value={formData.password}
+              onChange={handleChange}
+              error={check ? false : !formData.password }
+              helperText={check ? "": !formData.password ? "Please fill this field!" : ""}
             />
+
+            {error && <Typography variant="body2" fullWidth sx={{ color: "red" , justifyContent:"center", paddingTop: '10px', alignItems:'center'}}>{error}</Typography>}{" "}
+            
+
             <Button
               type="submit"
               fullWidth
@@ -153,28 +211,29 @@ export default function Register() {
             >
               Log in
             </Button>
-
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
               }}
             >
-                <FormControlLabel
-                  control={<Checkbox />}
-                  name="checkbox"
-                  label={
-                    <Typography variant="body2" color="#6C737F">
-                      {"  "}I have read the{" "}
-                      <NavLink
-                        to="/"
-                        sx={{ color: "#635BFF", textDecoration: "none" }}
-                      >
-                        Terms and Condidions
-                      </NavLink>
-                    </Typography>
-                  }
-                />
+              <FormControlLabel
+                control={<Checkbox />}
+                name="checkbox"
+                checked={formData.checkbox}
+                onChange={handleChange}
+                label={
+                  <Typography variant="body2" color="#6C737F">
+                    {"  "}I have read the{" "}
+                    <NavLink
+                      to="/"
+                      sx={{ color: "#635BFF", textDecoration: "none" }}
+                    >
+                      Terms and Condidions
+                    </NavLink>
+                  </Typography>
+                }
+              />
             </Box>
           </Box>
         </Box>

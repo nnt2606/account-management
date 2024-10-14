@@ -12,7 +12,6 @@ import { SessionSerializer } from './utils/SessionSerializer';
   imports: [
     MongooseModule.forFeature([{name: 'users', schema: UserSchema}]),
     UsersModule,
-   
   ],
   providers: [
     AuthService, 
