@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Logging } from './interface/logging.interface';
 
 @Injectable()
@@ -19,19 +19,17 @@ export class LoggingService {
 
     async getLogUser(id: string) {
         try{
-            const log = await this.loggingModel.findOne({userId: id});
+            const log = await this.loggingModel.find({userId: new mongoose.Types.ObjectId(id)});
             return {
-                status: HttpStatus.ACCEPTED,
+                status: HttpStatus.OK,
                 message: "Success",
                 data: log
             }
-        }catch {
+        }catch(e) {
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
-                message: 'Failed!',
+                message: e,
             }, HttpStatus.BAD_REQUEST);
         }
-        
-
     }
 }

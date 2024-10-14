@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateUser } from './dto/create-user.dto';
 import { User } from './interface/user.inteface';
 import { UpdateUser } from './dto/update-user.dto';
@@ -42,7 +42,7 @@ export class UsersService {
         try {
             const users = await this.userModel.find().exec();
             return {
-                status: HttpStatus.ACCEPTED,
+                status: HttpStatus.OK,
                 message: 'Success',
                 data: users,
             }
@@ -54,21 +54,22 @@ export class UsersService {
         }
     }
 
-    async getUserDetail(id: string) {
+    async getUserDetail(req: User) {
         try {
-            const users = await this.userModel.findOne({id: id});
+            const users = await this.userModel.findOne({id: req.id});
             return {
-                status: HttpStatus.ACCEPTED,
+                status: HttpStatus.OK,
                 message: 'Success',
                 data: users,
             }
         } catch (e) {
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
-                message: 'Failed!',
+                message: e,
             }, HttpStatus.BAD_REQUEST);
         }
     }
+
     async updateUser(userDto: UpdateUser) {
         try {
             const user = await this.userModel.findByIdAndUpdate(userDto.id,
@@ -76,7 +77,7 @@ export class UsersService {
             );
             this.loggingService.logging(user.id, "Cập nhập thông tin cá nhân!");
             return {
-                status: HttpStatus.ACCEPTED,
+                status: HttpStatus.OK,
                 message: 'Update successful',
                 data: user
             }
@@ -88,18 +89,19 @@ export class UsersService {
         }
     }
 
-    async deleteUser(id: string) {
+    async deleteUser(req: User) {
         try {
-            const user = await this.userModel.findByIdAndDelete(id);
-            this.loggingService.logging(id, " Xóa tài khoản!");
+            const user = await this.userModel.findByIdAndDelete(req.id);
+            this.loggingService.logging(req.id, " Xóa tài khoản!");
             return {
-                status: HttpStatus.ACCEPTED,
-                message: 'Update successful'
+                status: HttpStatus.OK,
+                message: 'Update successful',
+                data: user
             }
-        } catch {
+        } catch(e) {
             throw new HttpException({
                 status: HttpStatus.BAD_REQUEST,
-                message: 'Failed',
+                message: e,
             }, HttpStatus.BAD_REQUEST);
         }
     }

@@ -40,11 +40,12 @@ export default function Register() {
     setCheck(false);
     event.preventDefault();
     const { name, email, password, checkbox } = formData;
-    if (!name || !email || !password || !checkbox) {
+    if (!name || !email || !password || !checkbox || !emailRegex.test(email)) {
       setError("Please fill all the fields!");
-      return;
+    } else{
+      register(name, email, password);
     }
-    register(name, email, password);
+    
   };
 
   const register = async (name, email, password) => {
@@ -209,7 +210,7 @@ export default function Register() {
                 textTransform: "none",
               }}
             >
-              Log in
+              Register
             </Button>
             <Box
               sx={{

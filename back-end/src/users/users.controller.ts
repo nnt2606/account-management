@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { AuthenticatedGuard } from 'src/auth/utils/LocalGuard';
 import { UpdateUser } from './dto/update-user.dto';
 import { Response, response } from 'express';
+import { User } from './interface/user.inteface';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +17,7 @@ export class UsersController {
         return this.userService.register(newUser);
     }
 
-    @UseGuards(AuthenticatedGuard)
+    // @UseGuards(AuthenticatedGuard)
     @Post('/getAll')
     getAllUser() {
         return this.userService.getAllUser();
@@ -30,13 +31,13 @@ export class UsersController {
 
     @UseGuards(AuthenticatedGuard)
     @Post('/delete')
-    delete(@Body() id: string) {
-        return this.userService.deleteUser(id);
+    delete(@Body() req: User) {
+        return this.userService.deleteUser(req);
     }
 
     @UseGuards(AuthenticatedGuard)
     @Post('/user-detail')
-    detailUser(@Body() id: string) {
-        return this.userService.getUserDetail(id);
+    detailUser(@Body() req: User) {
+        return this.userService.getUserDetail(req);
     }
 }

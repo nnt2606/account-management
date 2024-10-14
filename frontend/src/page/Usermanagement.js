@@ -27,7 +27,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ContentCopyTwoToneIcon from "@mui/icons-material/ContentCopyTwoTone";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { UserDrawer } from "../component/Drawer";
+import { getAllUser } from "../APIs/userAPIs";
 
 const getRoleColor = (role) => {
   switch (role) {
@@ -47,11 +49,53 @@ function copyToClipboard(text) {
 }
 
 const UserManagement = () => {
+  const [datainit, setDatainit] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
+  const [data, setData] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [userData, setUserData] = useState({});
+
+
+  useEffect(()=> {
+    getData(page, rowsPerPage);
+  },[])
+
+  const getData = async(page, rowsPerPage) => {
+    try{
+      const response = await getAllUser();
+      const tmp = response.data.data;
+      setDatainit(response.data.data);
+      const displayedRows = tmp.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      );
+      setData(displayedRows);
+    }catch (e) {
+      console.log(e);
+      alert("Load data failed!")
+    }
+    
+  }
+
+  const getDataWithSearch = (page, rowsPerPage) => {
+    const filteredRow = datainit.filter((row) => 
+      row.name.toLowerCase().includes(search.toLowerCase().trim())
+    ).slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+    setData(filteredRow);
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    if (!search) {
+      getData(page, rowsPerPage);
+      return true;  // If searchTerm is empty, return all rows
+    }
+    getDataWithSearch(page, rowsPerPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -59,10 +103,36 @@ const UserManagement = () => {
     setPage(0); // Reset to the first page after changing rows per page
   };
 
-  const displayedRows = USER_DATA.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  const handleChangeSearh = (event) => {
+    setSearch(event.target.value);
+  }
+
+  const onClickSearchButton = () =>{
+    if (!search) {
+      getData(page, rowsPerPage);
+      return true;  // If searchTerm is empty, return all rows
+    }
+    getDataWithSearch(page, rowsPerPage);
+  }
+
+  const onClickRowView = (row) => {
+    console.log(row);
+    setUserData(row);
+    setIsDrawerOpen(true);
+  }
+
+  const onClickRowEdit = (row) => {
+    
+  }
+
+  const onClickRowDelete = (row) => {
+
+  }
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+ 
 
   return (
     <Container maxWidth={false} sx={{
@@ -155,6 +225,8 @@ const UserManagement = () => {
                 borderRadius: "12px", // Set the desired border radius here
               },
             }}
+            onChange={handleChangeSearh}
+            value={search}
           />
           <Button
             variant="contained"
@@ -163,6 +235,7 @@ const UserManagement = () => {
               textTransform: "none",
               borderRadius: 3,
             }}
+            onClick={onClickSearchButton}
           >
             Search
           </Button>
@@ -190,8 +263,8 @@ const UserManagement = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {displayedRows.map((user, index) => (
-              <TableRow key={user.id}>
+            {data.map((user, index) => (
+              <TableRow key={user._id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>
                   <div style={{ display: "flex", alignItems: "center" }}>
@@ -203,10 +276,10 @@ const UserManagement = () => {
                         textOverflow: "ellipsis",
                       }}
                     >
-                      {user.id}
+                      {user._id}
                     </span>
                     <Tooltip title="Copy to clipboard">
-                      <IconButton onClick={() => copyToClipboard(user.id)}>
+                      <IconButton onClick={() => copyToClipboard(user._id)}>
                         <ContentCopyTwoToneIcon sx={{ color: "#635BFF" }} />
                       </IconButton>
                     </Tooltip>
@@ -237,16 +310,17 @@ const UserManagement = () => {
                   />
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton aria-label="view" sx={{ color: "#6B7280" }}>
+                  <IconButton aria-label="view" sx={{ color: "#6B7280" }} onClick={() => onClickRowView(user)}>
                     <VisibilityIcon />
                   </IconButton>
-                  <IconButton aria-label="edit" sx={{ color: "#6B7280" }}>
+                  <IconButton aria-label="edit" sx={{ color: "#6B7280" }} onClick={() => onClickRowEdit(user)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton aria-label="delete" sx={{ color: "#6B7280" }}>
+                  <IconButton aria-label="delete" sx={{ color: "#6B7280" }} onClick={() => onClickRowDelete(user)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
+                {isDrawerOpen && <UserDrawer user={userData} open={isDrawerOpen} onClose={closeDrawer} onAction='View'/>}
               </TableRow>
             ))}
           </TableBody>
@@ -261,6 +335,9 @@ const UserManagement = () => {
           rowsPerPageOptions={[5, 10, 15, 20]} // Options for rows per page
         />
       </TableContainer>
+
+
+    
     </Container>
   );
 };

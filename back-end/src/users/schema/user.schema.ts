@@ -10,7 +10,7 @@ export const UserSchema = new mongoose.Schema({
     account_type: {type: String},
     nationality: {type: String},
     language: {type: String},
-    role: {type: String},
+    role: {type: String, default: "User"},
     date: {type: Date, default: new Date()},
     status: {type: Boolean, default: false},
 }, {

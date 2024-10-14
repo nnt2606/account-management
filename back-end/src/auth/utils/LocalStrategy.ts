@@ -21,7 +21,7 @@ export class LocalStrategty extends PassportStrategy(Strategy) {
             }, HttpStatus.BAD_REQUEST);
         }
         return {
-            status: HttpStatus.ACCEPTED,
+            status: HttpStatus.OK,
             message: 'Login success',
             data: user
         }

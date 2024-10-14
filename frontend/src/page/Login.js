@@ -150,8 +150,6 @@ export default function SignIn() {
               id="email"
               label="Email address"
               name="email"
-              autoComplete="email"
-              autoFocus
               value={formData.email}
               onChange={handleChange}
               error={
@@ -180,7 +178,6 @@ export default function SignIn() {
               id="password"
               value={formData.password}
               onChange={handleChange}
-              autoComplete="current-password"
               error={check ? false : !formData.password}
               helperText={
                 check ? "" : !formData.password ? "Please fill this field!" : ""
